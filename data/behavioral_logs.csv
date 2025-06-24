@@ -1,0 +1,8 @@
+hour,day_of_week,brightness,orientation,internet_connected,wifi_hash,ip_hash,unlock_type_used
+0,1,100,flat,True,16d60dd6,e363480c,FACE
+0,1,100,vertical,True,16d60dd6,e363480c,FACE
+0,1,100,vertical,True,16d60dd6,e363480c,PIN
+16,1,100,flat,True,16d60dd6,e363480c,FACE
+17,1,100,flat,True,16d60dd6,e363480c,FACE
+17,1,100,flat,True,16d60dd6,e363480c,FACE
+17,1,100,flat,True,16d60dd6,e363480c,PIN
