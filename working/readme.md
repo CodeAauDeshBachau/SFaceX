@@ -1,3 +1,4 @@
+## make venv
 ## remove images from each folder inside data
 ## move the photos in positive in negative as they are negative images for others
 ## remove you images from negative 
