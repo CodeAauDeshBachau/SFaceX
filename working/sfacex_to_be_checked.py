@@ -859,65 +859,65 @@ class LBPChiSquareAuthenticator:
             )
             return False
 
-        # for pose, image_paths in pose_image_dict.items():
-        #     if not image_paths or len(image_paths) == 0:
-        #         print(
-        #             f"Error: No images provided for pose '{pose}'. Enrollment failed."
-        #         )
-        #         self.enrolled_templates_data = []
-        #         return False
-
-        #     print(f"  Processing pose: '{pose}' with {len(image_paths)} images...")
-        #     pose_features_list = []
-        #     for img_path in image_paths:
-        #         features = self._extract_features(img_path)
-        #         if features is not None and features.size > 0:
-        #             pose_features_list.append(features)
-        #         else:
-        #             print(
-        #                 f"    Warning: Could not extract features for {img_path}. Skipping."
-        #             )
-
-        #     if not pose_features_list:
-        #         print(
-        #             f"Error: Failed to extract any features for pose '{pose}'. Enrollment failed."
-        #         )
-        #         self.enrolled_templates_data = []
-        #         return False
-
-        #     # Calculate the mean feature vector
-        #     mean_features = np.mean(np.array(pose_features_list), axis=0)
-
-        #     # Create a single TemplateEntry for this pose using the mean features
-        #     template_entry = TemplateEntry(
-        #         id=f"pose_{pose}",
-        #         template_vector=mean_features,
-        #         pose_label=pose,
-        #         initial_sample_count=len(pose_features_list),
-        #     )
-        #     self.enrolled_templates_data.append(template_entry)
         for pose, image_paths in pose_image_dict.items():
-            print(f"  Processing pose: '{pose}'...")
+            if not image_paths or len(image_paths) == 0:
+                print(
+                    f"Error: No images provided for pose '{pose}'. Enrollment failed."
+                )
+                self.enrolled_templates_data = []
+                return False
+
+            print(f"  Processing pose: '{pose}' with {len(image_paths)} images...")
+            pose_features_list = []
             for img_path in image_paths:
                 features = self._extract_features(img_path)
                 if features is not None and features.size > 0:
-                    # Create a UNIQUE ID for each individual template
-                    template_id = f"{pose}_{template_counter}"
-
-                    # Create a SEPARATE template for EACH image
-                    template_entry = TemplateEntry(
-                        id=template_id,
-                        template_vector=features,
-                        pose_label=pose,
-                        source="enrollment",
-                        initial_sample_count=1,  # Sample count is 1 for an individual image
-                    )
-                    self.enrolled_templates_data.append(template_entry)
-                    template_counter += 1
+                    pose_features_list.append(features)
                 else:
                     print(
                         f"    Warning: Could not extract features for {img_path}. Skipping."
                     )
+
+            if not pose_features_list:
+                print(
+                    f"Error: Failed to extract any features for pose '{pose}'. Enrollment failed."
+                )
+                self.enrolled_templates_data = []
+                return False
+
+            # Calculate the mean feature vector
+            mean_features = np.mean(np.array(pose_features_list), axis=0)
+
+            # Create a single TemplateEntry for this pose using the mean features
+            template_entry = TemplateEntry(
+                id=f"pose_{pose}",
+                template_vector=mean_features,
+                pose_label=pose,
+                initial_sample_count=len(pose_features_list),
+            )
+            self.enrolled_templates_data.append(template_entry)
+        # for pose, image_paths in pose_image_dict.items():
+        #     print(f"  Processing pose: '{pose}'...")
+        #     for img_path in image_paths:
+        #         features = self._extract_features(img_path)
+        #         if features is not None and features.size > 0:
+        #             # Create a UNIQUE ID for each individual template
+        #             template_id = f"{pose}_{template_counter}"
+
+        #             # Create a SEPARATE template for EACH image
+        #             template_entry = TemplateEntry(
+        #                 id=template_id,
+        #                 template_vector=features,
+        #                 pose_label=pose,
+        #                 source="enrollment",
+        #                 initial_sample_count=1,  # Sample count is 1 for an individual image
+        #             )
+        #             self.enrolled_templates_data.append(template_entry)
+        #             template_counter += 1
+        #         else:
+        #             print(
+        #                 f"    Warning: Could not extract features for {img_path}. Skipping."
+        #             )
 
         self.enrollment_date = datetime.now().isoformat()
         print(
@@ -1321,79 +1321,79 @@ class LBPChiSquareAuthenticator:
         self.new_template_distance = optimal_distance_threshold + 1
         self.save_data()
 
-        # Plot and save histograms for positive and negative distances
-        import matplotlib.pyplot as plt
+        # # Plot and save histograms for positive and negative distances
+        # import matplotlib.pyplot as plt
 
-        os.makedirs("./roc_output", exist_ok=True)
+        # os.makedirs("./roc_output", exist_ok=True)
 
-        plt.figure()
-        plt.hist(
-            positive_distances,
-            bins=30,
-            alpha=0.7,
-            label="Positive Distances",
-            color="g",
-        )
-        plt.axvline(
-            optimal_distance_threshold, color="k", linestyle="--", label="Threshold"
-        )
-        plt.xlabel("Chi-Square Distance")
-        plt.ylabel("Frequency")
-        plt.title("Histogram of Positive Distances")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig("./roc_output/positive_distances_hist.png")
-        plt.close()
+        # plt.figure()
+        # plt.hist(
+        #     positive_distances,
+        #     bins=30,
+        #     alpha=0.7,
+        #     label="Positive Distances",
+        #     color="g",
+        # )
+        # plt.axvline(
+        #     optimal_distance_threshold, color="k", linestyle="--", label="Threshold"
+        # )
+        # plt.xlabel("Chi-Square Distance")
+        # plt.ylabel("Frequency")
+        # plt.title("Histogram of Positive Distances")
+        # plt.legend()
+        # plt.tight_layout()
+        # plt.savefig("./roc_output/positive_distances_hist.png")
+        # plt.close()
 
-        plt.figure()
-        plt.hist(
-            negative_distances,
-            bins=30,
-            alpha=0.7,
-            label="Negative Distances",
-            color="r",
-        )
-        plt.axvline(
-            optimal_distance_threshold, color="k", linestyle="--", label="Threshold"
-        )
-        plt.xlabel("Chi-Square Distance")
-        plt.ylabel("Frequency")
-        plt.title("Histogram of Negative Distances")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig("./roc_output/negative_distances_hist.png")
-        plt.close()
+        # plt.figure()
+        # plt.hist(
+        #     negative_distances,
+        #     bins=30,
+        #     alpha=0.7,
+        #     label="Negative Distances",
+        #     color="r",
+        # )
+        # plt.axvline(
+        #     optimal_distance_threshold, color="k", linestyle="--", label="Threshold"
+        # )
+        # plt.xlabel("Chi-Square Distance")
+        # plt.ylabel("Frequency")
+        # plt.title("Histogram of Negative Distances")
+        # plt.legend()
+        # plt.tight_layout()
+        # plt.savefig("./roc_output/negative_distances_hist.png")
+        # plt.close()
 
-        # Save ROC curve
-        if plot_roc:
-            import matplotlib.pyplot as plt
+        # # Save ROC curve
+        # if plot_roc:
+        #     import matplotlib.pyplot as plt
 
-            output_path = "./roc_output/roc_curve.png"
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        #     output_path = "./roc_output/roc_curve.png"
+        #     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-            plt.figure()
-            plt.plot(fpr, tpr, label=f"AUC = {roc_auc_value:.3f}")
-            plt.axvline(
-                desired_far,
-                color="gray",
-                linestyle="--",
-                label=f"FAR ≤ {desired_far*100:.1f}%",
-            )
-            plt.axvline(
-                fpr[best_idx] if len(allowed_idxs) > 0 else fpr[0],
-                color="r",
-                linestyle="--",
-                label="Selected Threshold",
-            )
-            plt.xlabel("False Positive Rate")
-            plt.ylabel("True Positive Rate")
-            plt.title("ROC Curve (Chi-Square Distance)")
-            plt.legend()
-            plt.grid()
-            plt.tight_layout()
-            plt.savefig(output_path)
-            plt.close()
-            print(f"ROC plot saved to: {output_path}")
+        #     plt.figure()
+        #     plt.plot(fpr, tpr, label=f"AUC = {roc_auc_value:.3f}")
+        #     plt.axvline(
+        #         desired_far,
+        #         color="gray",
+        #         linestyle="--",
+        #         label=f"FAR ≤ {desired_far*100:.1f}%",
+        #     )
+        #     plt.axvline(
+        #         fpr[best_idx] if len(allowed_idxs) > 0 else fpr[0],
+        #         color="r",
+        #         linestyle="--",
+        #         label="Selected Threshold",
+        #     )
+        #     plt.xlabel("False Positive Rate")
+        #     plt.ylabel("True Positive Rate")
+        #     plt.title("ROC Curve (Chi-Square Distance)")
+        #     plt.legend()
+        #     plt.grid()
+        #     plt.tight_layout()
+        #     plt.savefig(output_path)
+        #     plt.close()
+        #     print(f"ROC plot saved to: {output_path}")
 
         return self.threshold, roc_auc_value, (fpr, tpr, -thresholds)
 
