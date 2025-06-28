@@ -28,7 +28,12 @@ from PySide6.QtCore import Signal
 
 # Assuming sfacex_to_be_checked.py contains the LBPChiSquareAuthenticator
 # and is in the same directory or accessible via PYTHONPATH.
-from sfacex_to_be_checked import LBPChiSquareAuthenticator, get_uniform_lbp_mapping
+from sfacex_to_be_checked import (
+    LBPChiSquareAuthenticator,
+    get_uniform_lbp_mapping,
+    lock_folder,
+    unlock_folder,
+)
 from Behaviour_learning2 import BehavioralAuthenticationSystem
 
 # ==============================================================================
@@ -531,6 +536,7 @@ class FaceScanScreen(QWidget):
                 self.authenticator.unlock_type = "FACE"
                 self.status_label.setText("Face Recognized! Unlocking...")
                 self.stop_scan()
+                unlock_folder()
                 self.behavior_model.record_unlock_attempt("FACE")
                 # Save the detected and cropped face in a folder named 'data' when authenticated
                 try:
@@ -633,6 +639,7 @@ class PinScreen(QWidget):
             self.authenticator.unlock_type = "PIN"
             self.pin_display.setText("PIN Accepted")
             self.behavior_model.record_unlock_attempt("PIN")
+            unlock_folder()
             self.switch_to_home()
         else:
             print("PIN incorrect.")
@@ -769,6 +776,7 @@ class MainWindow(QMainWindow):
     def show_face_scan_screen(self):
         self.pin_screen.reset_pin()
         self.stacked_widget.setCurrentWidget(self.face_scan_screen)
+        lock_folder()
         # Pre-initialize camera when showing face screen
         self.face_scan_screen.pre_initialize_camera()
 

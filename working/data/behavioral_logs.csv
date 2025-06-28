@@ -78,3 +78,13 @@ hour,day_of_week,brightness,orientation,internet_connected,wifi_hash,ip_hash,unl
 13,4,100,flat,True,b9ed5762,fa366f9c,PIN
 13,4,100,flat,True,b9ed5762,fa366f9c,PIN
 13,4,100,flat,True,b9ed5762,fa366f9c,FACE
+12,5,100,flat,True,16d60dd6,e363480c,PIN
+12,5,100,flat,True,16d60dd6,e363480c,FACE
+12,5,100,vertical,True,16d60dd6,e363480c,FACE
+12,5,100,flat,True,16d60dd6,e363480c,FACE
+12,5,100,vertical,True,16d60dd6,e363480c,FACE
+12,5,100,flat,True,16d60dd6,e363480c,FACE
+12,5,100,vertical,True,16d60dd6,e363480c,FACE
+12,5,100,vertical,True,16d60dd6,e363480c,FACE
+12,5,100,flat,True,16d60dd6,e363480c,FACE
+12,5,100,flat,True,16d60dd6,e363480c,FACE

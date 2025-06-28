@@ -12,9 +12,22 @@ from operator import attrgetter
 from datetime import datetime
 from skimage.feature import local_binary_pattern, hog
 from numba import jit, prange
+import subprocess
 
 # Imports for ROC analysis
 from sklearn.metrics import roc_curve, auc
+
+
+def lock_folder(folder_path="./private_folder"):
+    cmd = f'icacls "{folder_path}" /deny %USERNAME%:F'
+    subprocess.run(cmd, shell=True)
+    print("Folder locked.")
+
+
+def unlock_folder(folder_path="./private_folder"):
+    cmd = f'icacls "{folder_path}" /remove:d %USERNAME%'
+    subprocess.run(cmd, shell=True)
+    print("Folder unlocked.")
 
 
 # Convert image to grayscale
@@ -613,6 +626,8 @@ class LBPChiSquareAuthenticator:
         self.ratio_threshold = (
             ratio_threshold  # A value between 0 and 1. Lower is stricter.
         )
+
+        lock_folder()  # Lock the folder at initialization
 
         self.unlock_method = None
         self.last_auth_result = None
